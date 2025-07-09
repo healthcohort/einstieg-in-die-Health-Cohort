@@ -1,90 +1,736 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Health Cohort Bot</title>
-<style>
-body { font-family: Arial, sans-serif; background: #f8f8f8; margin: 0; padding: 0; }
-.container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
-.question { font-size: 1.2em; margin-bottom: 20px; }
-.options button { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer; }
-.options button:hover { background: #e0f7fa; }
-.result { text-align: center; }
-.result h2 { color: #d1006f; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Cohort - Finde deinen Weg</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            padding: 20px 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 672px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-8 {
+            margin-bottom: 32px;
+        }
+        
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        
+        .mb-3 {
+            margin-bottom: 12px;
+        }
+        
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        
+        .mb-1 {
+            margin-bottom: 4px;
+        }
+        
+        .mt-6 {
+            margin-top: 24px;
+        }
+        
+        .p-4 {
+            padding: 16px;
+        }
+        
+        .p-6 {
+            padding: 24px;
+        }
+        
+        .px-3 {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        
+        .py-1 {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        
+        .px-6 {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        
+        .py-3 {
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+        
+        .heart-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #00b3b3, #008b8b);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #020203;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+        
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-dot.active {
+            background: linear-gradient(135deg, #00b3b3, #008b8b);
+        }
+        
+        .question-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 24px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .option-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f5f5f5;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            color: #374151;
+        }
+        
+        .option-button:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-color: #00b3b3;
+        }
+        
+        .option-icon {
+            font-size: 20px;
+            color: #6b7280;
+            transition: color 0.2s ease;
+        }
+        
+        .option-button:hover .option-icon {
+            color: #00b3b3;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .arrow-icon {
+            color: #9ca3af;
+            transition: color 0.2s ease;
+        }
+        
+        .option-button:hover .arrow-icon {
+            color: #00b3b3;
+        }
+        
+        .hint {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        /* Result Styles */
+        .result-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .result-type {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .result-message {
+            color: #6b7280;
+            font-style: italic;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .recommendation-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .recommendation-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f3f4f6;
+        }
+        
+        .recommendation-header {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-primary {
+            background: linear-gradient(135deg, #d1006f, #a8004f);
+        }
+        
+        .badge-secondary {
+            background: linear-gradient(135deg, #00b3b3, #008b8b);
+        }
+        
+        .primary-course {
+            font-size: 18px;
+            font-weight: 500;
+            color: #00b3b3;
+        }
+        
+        .secondary-course {
+            color: #374151;
+        }
+        
+        .theme-groups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .theme-tag {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .theme-tag-primary {
+            background-color: #00b3b3;
+        }
+        
+        .theme-tag-secondary {
+            background-color: #d1006f;
+        }
+        
+        .quick-win {
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            border: 2px solid #d1006f;
+        }
+        
+        .quick-win-title {
+            font-weight: 600;
+            color: #d1006f;
+            margin-bottom: 8px;
+        }
+        
+        .quick-win-text {
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .reset-button {
+            background-color: #d1006f;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s ease;
+        }
+        
+        .reset-button:hover {
+            opacity: 0.9;
+        }
+        
+        .footer-text {
+            text-align: center;
+            font-size: 14px;
+            color: #2c2c2c;
+        }
+        
+        /* Background colors for results */
+        .bg-cyan-50 {
+            background-color: #ecfeff;
+        }
+        
+        .bg-pink-50 {
+            background-color: #fdf2f8;
+        }
+        
+        .bg-gray-50 {
+            background-color: #f9fafb;
+        }
+        
+        .result-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .result-icon-cyan {
+            background: linear-gradient(135deg, #00b3b3, #008b8b);
+        }
+        
+        .result-icon-pink {
+            background: linear-gradient(135deg, #d1006f, #a8004f);
+        }
+        
+        .result-icon-gray {
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div id="app">
+            <!-- Bot wird hier gerendert -->
+        </div>
+    </div>
 
-<div class="container" id="bot">
-  <div id="step">
-    <h1>Finde deinen Weg</h1>
-    <p class="question"></p>
-    <div class="options"></div>
-  </div>
-  <div id="result" class="result" style="display:none;">
-    <h2>Dein Ergebnis</h2>
-    <p id="result-message"></p>
-    <button onclick="location.reload()">Nochmal machen</button>
-  </div>
-</div>
+    <script>
+        // Bot State
+        let currentStep = 0;
+        let answers = {};
+        let result = null;
 
-<script>
-const questions = [
-  { id: 'lifestyle', question: 'Wie sieht dein Alltag gerade aus?', options: [
-    { value: 'employed', text: 'Angestellt - feste Arbeitszeiten' },
-    { value: 'selfemployed', text: 'Selbstständig/Unternehmer' },
-    { value: 'transition', text: 'Zwischen Jobs/Neuorientierung' },
-    { value: 'retired', text: 'Ruhestand/mehr Zeit für mich' }
-  ]},
-  { id: 'evening_scenario', question: 'Es ist 22:30 Uhr. Du liegst im Bett und...', options: [
-    { value: 'planning', text: 'planst gedanklich den nächsten Tag durch' },
-    { value: 'worrying', text: 'grübelst über Gespräche oder Situationen' },
-    { value: 'restless', text: 'fühlst dich körperlich unruhig/angespannt' },
-    { value: 'scrolling', text: 'schaust noch "kurz" aufs Handy' }
-  ]},
-  { id: 'stress_reaction', question: 'Du bekommst eine Nachricht, die Stress auslöst. Dein erster Impuls:', options: [
-    { value: 'immediate', text: 'Sofort reagieren und antworten' },
-    { value: 'anxiety', text: 'Bauchgefühl wird flau, Kopfkino startet' },
-    { value: 'ignore', text: 'Ignorieren, aber es beschäftigt dich trotzdem' },
-    { value: 'boundary', text: 'Bewusst Zeit nehmen vor der Reaktion' }
-  ]}
-];
+        // Questions Data
+        const questions = [
+            {
+                id: 'lifestyle',
+                question: 'Wie sieht dein Alltag gerade aus?',
+                options: [
+                    { value: 'employed', text: 'Angestellt - feste Arbeitszeiten', icon: '💼' },
+                    { value: 'selfemployed', text: 'Selbstständig/Unternehmer', icon: '👥' },
+                    { value: 'transition', text: 'Zwischen Jobs/Neuorientierung', icon: '🔄' },
+                    { value: 'retired', text: 'Ruhestand/mehr Zeit für mich', icon: '🏠' }
+                ]
+            },
+            {
+                id: 'evening_scenario',
+                question: 'Es ist 22:30 Uhr. Du liegst im Bett und...',
+                options: [
+                    { value: 'planning', text: 'planst gedanklich den nächsten Tag durch', icon: '⏰' },
+                    { value: 'worrying', text: 'grübelst über Gespräche oder Situationen', icon: '📱' },
+                    { value: 'restless', text: 'fühlst dich körperlich unruhig/angespannt', icon: '💗' },
+                    { value: 'scrolling', text: 'schaust noch "kurz" aufs Handy', icon: '➡️' }
+                ]
+            },
+            {
+                id: 'stress_reaction',
+                question: 'Du bekommst eine Nachricht, die Stress auslöst. Dein erster Impuls:',
+                options: [
+                    { value: 'immediate', text: 'Sofort reagieren und antworten', icon: '📱' },
+                    { value: 'anxiety', text: 'Bauchgefühl wird flau, Kopfkino startet', icon: '💗' },
+                    { value: 'ignore', text: 'Ignorieren, aber es beschäftigt dich trotzdem', icon: '⏰' },
+                    { value: 'boundary', text: 'Bewusst Zeit nehmen vor der Reaktion', icon: '☕' }
+                ]
+            },
+            {
+                id: 'morning_energy',
+                question: 'Wie startest du normalerweise in den Tag?',
+                options: [
+                    { value: 'tired', text: 'Müde - wie ein Handy mit 15% Akku', icon: '💗' },
+                    { value: 'anxious', text: 'Wach, aber innerlich schon gehetzt', icon: '⏰' },
+                    { value: 'overwhelmed', text: 'Die To-Do-Liste explodiert in deinem Kopf', icon: '📱' },
+                    { value: 'ok', text: 'Geht so - erstmal orientieren', icon: '☕' }
+                ]
+            },
+            {
+                id: 'decision_making',
+                question: 'Bei wichtigen Entscheidungen denkst du:',
+                options: [
+                    { value: 'overthink', text: 'Was, wenn ich das Falsche wähle? Alle Optionen durchdenken', icon: '📱' },
+                    { value: 'healthy', text: 'Was ist langfristig das Beste für mich?', icon: '💗' },
+                    { value: 'quick', text: 'Schnell entscheiden - Hauptsache vorankommen', icon: '⏰' },
+                    { value: 'intuitive', text: 'Auf mein Bauchgefühl hören', icon: '☕' }
+                ]
+            }
+        ];
 
-let currentStep = 0;
-let answers = {};
+        // Recommendation Logic
+        function getRecommendation(answers) {
+            const { lifestyle, ...otherAnswers } = answers;
+            const values = Object.values(otherAnswers);
+            
+            const counts = {
+                stress: values.filter(v => ['immediate', 'anxiety', 'anxious'].includes(v)).length,
+                overthinking: values.filter(v => ['planning', 'worrying', 'overthink'].includes(v)).length,
+                exhaustion: values.filter(v => ['tired', 'restless', 'overwhelmed'].includes(v)).length,
+                awareness: values.filter(v => ['boundary', 'healthy', 'intuitive', 'ok'].includes(v)).length
+            };
 
-function showStep(step) {
-  const q = questions[step];
-  document.querySelector('.question').textContent = q.question;
-  const opts = document.querySelector('.options');
-  opts.innerHTML = '';
-  q.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt.text;
-    btn.onclick = () => nextStep(q.id, opt.value);
-    opts.appendChild(btn);
-  });
-}
+            const maxCount = Math.max(...Object.values(counts));
+            const dominant = Object.keys(counts).find(key => counts[key] === maxCount);
 
-function nextStep(id, value) {
-  answers[id] = value;
-  currentStep++;
-  if (currentStep < questions.length) {
-    showStep(currentStep);
-  } else {
-    showResult();
-  }
-}
+            const getLifestyleSpecificContent = (type, lifestyle) => {
+                const content = {
+                    stress: {
+                        employed: {
+                            message: 'Dein System läuft im Dauerstress. Als Angestellte*r kennst du den Druck - Zeit, deinem Nervensystem beizubringen, dass Feierabend wirklich Feierabend ist.',
+                            quickWin: 'Heute Abend: Handy um 21 Uhr stumm - dein Nervensystem braucht echten Feierabend'
+                        },
+                        selfemployed: {
+                            message: 'Als Selbstständige*r kennst du den Stress, immer "an" zu sein. Dein Nervensystem braucht klare Grenzen - auch für dich als eigene*r Chef*in.',
+                            quickWin: 'Heute: Feste "Feierabend"-Zeit definieren - auch für dich als Chef*in'
+                        },
+                        transition: {
+                            message: 'Unsicherheit und Zukunftsangst stressen dein System. In Übergangsphasen braucht dein Nervensystem besonders viel Unterstützung.',
+                            quickWin: 'Heute: Eine Sache tun, die dir Kraft gibt - unabhängig von der Jobsuche'
+                        },
+                        retired: {
+                            message: 'Auch im Ruhestand kann Stress entstehen - durch Gesundheitssorgen, Familie oder neue Lebensumstände. Dein Nervensystem verdient Ruhe.',
+                            quickWin: 'Heute: Eine Aktivität, die dir echte Freude macht - ohne Stress oder Verpflichtung'
+                        }
+                    },
+                    overthinking: {
+                        employed: {
+                            message: 'Dein Kopf läuft auch nach Feierabend weiter. Arbeitsgedanken, Sorgen, Planungen - Zeit für mentale Klarheit.',
+                            quickWin: 'Nächstes Gedankenkarussell: "Stopp" sagen + 3 tiefe Atemzüge'
+                        },
+                        selfemployed: {
+                            message: 'Als Selbstständige*r denkst du an alles - Kunden, Projekte, Finanzen. Dein Kopf braucht Pausen vom "Unternehmermodus".',
+                            quickWin: 'Abends: Gedanken-Stopp um 20 Uhr + bewusst abschalten'
+                        },
+                        transition: {
+                            message: 'Zukunftssorgen und "Was wäre wenn"-Gedanken kreisen endlos. Zeit, aus dem Kopf in den Körper zu kommen.',
+                            quickWin: 'Bei Zukunftssorgen: "Was kann ich HEUTE tun?" fragen'
+                        },
+                        retired: {
+                            message: 'Mehr Zeit bedeutet oft mehr Raum zum Grübeln - über Familie, Gesundheit, Vergangenheit. Lass uns deinen Kopf beruhigen.',
+                            quickWin: 'Bei Grübeleien: Aufstehen + 5 Minuten Spaziergang'
+                        }
+                    },
+                    exhaustion: {
+                        employed: {
+                            message: 'Job, Familie, Verpflichtungen - du läufst auf Reserve. Dein Körper braucht echte Erholung, nicht nur Feierabend.',
+                            quickWin: 'Diese Woche: Mittagspause ohne Handy - nur 15 Minuten für dich'
+                        },
+                        selfemployed: {
+                            message: 'Selbstständigkeit bedeutet oft 24/7 arbeiten. Du hast vergessen, wie sich echte Erholung anfühlt.',
+                            quickWin: 'Diese Woche: Einen Tag komplett arbeitsfrei - ohne schlechtes Gewissen'
+                        },
+                        transition: {
+                            message: 'Jobsuche und Ungewissheit sind emotional erschöpfend. Du darfst müde sein und brauchst bewusste Pausen.',
+                            quickWin: 'Diese Woche: Bewusst Pausen von der Jobsuche - du darfst entspannen'
+                        },
+                        retired: {
+                            message: 'Ruhestand heißt nicht automatisch erholt sein. Dein Körper und Geist brauchen bewusste Regeneration.',
+                            quickWin: 'Diese Woche: Bewusst "Nein" zu Verpflichtungen sagen'
+                        }
+                    },
+                    awareness: {
+                        employed: {
+                            message: 'Du hast schon ein gutes Gespür für dich. Lass uns deine Achtsamkeit vertiefen, damit sie auch im Arbeitsalltag trägt.',
+                            quickWin: 'Morgen früh: 5 Minuten bewusst spüren, was dein Körper vor der Arbeit braucht'
+                        },
+                        selfemployed: {
+                            message: 'Als Selbstständige*r hast du schon Selbstverantwortung gelernt. Zeit, diese auch für dein Wohlbefinden zu nutzen.',
+                            quickWin: 'Täglich: 10 Minuten nur für dich - nicht für Kunden oder Business'
+                        },
+                        transition: {
+                            message: 'Du hast eine gute Basis und Vertrauen in den Prozess. Lass uns diese Stärke ausbauen für deinen neuen Weg.',
+                            quickWin: 'Täglich: Eine Sache, für die du dankbar bist - stärkt dein Vertrauen'
+                        },
+                        retired: {
+                            message: 'Du hast Lebenserfahrung und Weisheit. Zeit, diese bewusst für dein Wohlbefinden und deine Gesundheit zu nutzen.',
+                            quickWin: 'Täglich: 10 Minuten in der Natur - spüren statt denken'
+                        }
+                    }
+                };
 
-function showResult() {
-  document.getElementById('step').style.display = 'none';
-  document.getElementById('result').style.display = 'block';
-  document.getElementById('result-message').textContent = 'Danke für deine Antworten! Wir empfehlen dir, achtsam mit deinem Nervensystem umzugehen und kleine Schritte zu machen.';
-}
+                return content[type]?.[lifestyle] || content[type]?.employed;
+            };
 
-showStep(currentStep);
-</script>
+            const lifestyleContent = getLifestyleSpecificContent(dominant, lifestyle);
 
+            const recommendations = {
+                stress: {
+                    type: 'Nervensystem-Regulation',
+                    primaryCourse: 'Stressmanagement Kurs',
+                    secondaryCourse: 'Achtsamkeitskurs',
+                    themeGroups: ['Nervensystem & Stress', 'Schlaf/Erholung/Rückzug'],
+                    message: lifestyleContent?.message || 'Dein System läuft im Dauerstress. Zeit, deinem Nervensystem beizubringen, dass es sicher ist.',
+                    quickWin: lifestyleContent?.quickWin || 'Heute Abend: 5 Minuten bewusst atmen statt Handy checken',
+                    bgColor: 'bg-cyan-50',
+                    iconClass: 'result-icon-cyan'
+                },
+                overthinking: {
+                    type: 'Gedankenstopp',
+                    primaryCourse: 'Overthinking Kurs',
+                    secondaryCourse: 'Achtsamkeitskurs',
+                    themeGroups: ['Mentale Gesundheit & Mindset', 'Nervensystem & Stress'],
+                    message: lifestyleContent?.message || 'Dein Kopf ist ein Browser mit 47 offenen Tabs. Lass uns aufräumen.',
+                    quickWin: lifestyleContent?.quickWin || 'Nächstes Mal beim Grübeln: 3 tiefe Atemzüge + eine konkrete Handlung',
+                    bgColor: 'bg-pink-50',
+                    iconClass: 'result-icon-pink'
+                },
+                exhaustion: {
+                    type: 'Energie & Erholung',
+                    primaryCourse: 'Besser Schlafen Kurs',
+                    secondaryCourse: 'Stressmanagement Kurs',
+                    themeGroups: ['Schlaf/Erholung/Rückzug', 'Nervensystem & Stress'],
+                    message: lifestyleContent?.message || 'Du läufst auf Reserve. Dein Körper braucht echte Erholung, nicht nur Pausen.',
+                    quickWin: lifestyleContent?.quickWin || 'Heute: 20 Minuten ohne Stimulation - kein Handy, kein Podcast, nur du',
+                    bgColor: 'bg-gray-50',
+                    iconClass: 'result-icon-gray'
+                },
+                awareness: {
+                    type: 'Ganzheitliche Stärkung',
+                    primaryCourse: 'Achtsamkeitskurs',
+                    secondaryCourse: 'Mindset Kurs',
+                    themeGroups: ['Ganzheitliche Gesundheit', 'Mentale Gesundheit & Mindset'],
+                    message: lifestyleContent?.message || 'Du hast schon eine gute Basis. Lass uns deine Intuition und Achtsamkeit vertiefen.',
+                    quickWin: lifestyleContent?.quickWin || 'Diese Woche: Einmal täglich 2 Minuten bewusst wahrnehmen, was du gerade brauchst',
+                    bgColor: 'bg-cyan-50',
+                    iconClass: 'result-icon-cyan'
+                }
+            };
+
+            return recommendations[dominant] || recommendations.awareness;
+        }
+
+        // Handle Answer
+        function handleAnswer(value) {
+            answers[questions[currentStep].id] = value;
+
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                render();
+            } else {
+                result = getRecommendation(answers);
+                render();
+            }
+        }
+
+        // Reset Bot
+        function resetBot() {
+            currentStep = 0;
+            answers = {};
+            result = null;
+            render();
+        }
+
+        // Render Result
+        function renderResult() {
+            return `
+                <div class="card">
+                    <div class="result-container p-6 ${result.bgColor}">
+                        <div class="result-header">
+                            <div class="result-icon ${result.iconClass}">💗</div>
+                            <h2 class="title">Dein Startpunkt</h2>
+                            <h3 class="result-type">${result.type}</h3>
+                        </div>
+                        
+                        <div class="result-message mb-6">${result.message}</div>
+
+                        <div class="recommendation-grid">
+                            <div class="recommendation-item">
+                                <h4 class="recommendation-header">
+                                    <span class="badge badge-primary">1</span>
+                                    Dein Hauptkurs
+                                </h4>
+                                <p class="primary-course">${result.primaryCourse}</p>
+                            </div>
+
+                            <div class="recommendation-item">
+                                <h4 class="recommendation-header">
+                                    <span class="badge badge-secondary">+</span>
+                                    Ergänzend
+                                </h4>
+                                <p class="secondary-course">${result.secondaryCourse}</p>
+                            </div>
+
+                            <div class="recommendation-item">
+                                <h4 class="recommendation-header mb-3">📚 Deine Themengruppen</h4>
+                                <div class="theme-groups">
+                                    ${result.themeGroups.map((group, index) => `
+                                        <span class="theme-tag ${index === 0 ? 'theme-tag-primary' : 'theme-tag-secondary'}">
+                                            ${group}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="quick-win">
+                                <h4 class="quick-win-title">✨ Dein Quick Win</h4>
+                                <p class="quick-win-text">${result.quickWin}</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-6">
+                            <button onclick="resetBot()" class="reset-button">
+                                🔄 Nochmal machen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="footer-text">
+                        <p class="mb-1">💝 Starte dort, wo es sich richtig anfühlt.</p>
+                        <p>Kleine Schritte, große Wirkung - du schaffst das!</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Questions
+        function renderQuestions() {
+            const currentQuestion = questions[currentStep];
+            
+            return `
+                <div class="card">
+                    <div class="text-center mb-8">
+                        <div class="heart-icon">💗</div>
+                        <h1 class="title">Finde deinen Weg</h1>
+                        <p class="subtitle">Lass uns herausfinden, was dein System gerade braucht.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="progress-container">
+                            ${questions.map((_, index) => `
+                                <div class="progress-dot ${index <= currentStep ? 'active' : ''}"></div>
+                            `).join('')}
+                        </div>
+                        <p class="text-center" style="font-size: 14px; color: #6b7280;">
+                            ${currentStep + 1} von ${questions.length}
+                        </p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h2 class="question-title text-center">${currentQuestion.question}</h2>
+                        
+                        <div class="options-container">
+                            ${currentQuestion.options.map((option) => `
+                                <button onclick="handleAnswer('${option.value}')" class="option-button">
+                                    <div class="option-icon">${option.icon}</div>
+                                    <span class="option-text">${option.text}</span>
+                                    <span class="arrow-icon">➡️</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="hint">
+                        <p>💡 Wähle spontan - dein Bauchgefühl weiß die Antwort.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Main Render Function
+        function render() {
+            const app = document.getElementById('app');
+            if (result) {
+                app.innerHTML = renderResult();
+            } else {
+                app.innerHTML = renderQuestions();
+            }
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            render();
+        });
+    </script>
 </body>
 </html>
