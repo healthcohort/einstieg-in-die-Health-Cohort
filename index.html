@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Health Cohort Bot</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f8f8f8; margin: 0; padding: 0; }
+.container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+.question { font-size: 1.2em; margin-bottom: 20px; }
+.options button { display: block; width: 100%; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer; }
+.options button:hover { background: #e0f7fa; }
+.result { text-align: center; }
+.result h2 { color: #d1006f; }
+</style>
+</head>
+<body>
+
+<div class="container" id="bot">
+  <div id="step">
+    <h1>Finde deinen Weg</h1>
+    <p class="question"></p>
+    <div class="options"></div>
+  </div>
+  <div id="result" class="result" style="display:none;">
+    <h2>Dein Ergebnis</h2>
+    <p id="result-message"></p>
+    <button onclick="location.reload()">Nochmal machen</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { id: 'lifestyle', question: 'Wie sieht dein Alltag gerade aus?', options: [
+    { value: 'employed', text: 'Angestellt - feste Arbeitszeiten' },
+    { value: 'selfemployed', text: 'Selbstständig/Unternehmer' },
+    { value: 'transition', text: 'Zwischen Jobs/Neuorientierung' },
+    { value: 'retired', text: 'Ruhestand/mehr Zeit für mich' }
+  ]},
+  { id: 'evening_scenario', question: 'Es ist 22:30 Uhr. Du liegst im Bett und...', options: [
+    { value: 'planning', text: 'planst gedanklich den nächsten Tag durch' },
+    { value: 'worrying', text: 'grübelst über Gespräche oder Situationen' },
+    { value: 'restless', text: 'fühlst dich körperlich unruhig/angespannt' },
+    { value: 'scrolling', text: 'schaust noch "kurz" aufs Handy' }
+  ]},
+  { id: 'stress_reaction', question: 'Du bekommst eine Nachricht, die Stress auslöst. Dein erster Impuls:', options: [
+    { value: 'immediate', text: 'Sofort reagieren und antworten' },
+    { value: 'anxiety', text: 'Bauchgefühl wird flau, Kopfkino startet' },
+    { value: 'ignore', text: 'Ignorieren, aber es beschäftigt dich trotzdem' },
+    { value: 'boundary', text: 'Bewusst Zeit nehmen vor der Reaktion' }
+  ]}
+];
+
+let currentStep = 0;
+let answers = {};
+
+function showStep(step) {
+  const q = questions[step];
+  document.querySelector('.question').textContent = q.question;
+  const opts = document.querySelector('.options');
+  opts.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.text;
+    btn.onclick = () => nextStep(q.id, opt.value);
+    opts.appendChild(btn);
+  });
+}
+
+function nextStep(id, value) {
+  answers[id] = value;
+  currentStep++;
+  if (currentStep < questions.length) {
+    showStep(currentStep);
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('step').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result-message').textContent = 'Danke für deine Antworten! Wir empfehlen dir, achtsam mit deinem Nervensystem umzugehen und kleine Schritte zu machen.';
+}
+
+showStep(currentStep);
+</script>
+
+</body>
+</html>
